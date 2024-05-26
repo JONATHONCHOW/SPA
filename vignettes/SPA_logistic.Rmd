@@ -1,10 +1,14 @@
 ---
-title: "Saddlepoint Approximations in Logistic Regression"
+title: "Saddlepoint Approximations Method in Logistic Regression Model"
+author: "Jonathon Chow"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Saddlepoint Approximations in Logistic Regression}
+  %\VignetteIndexEntry{Saddlepoint Approximations Method in Logistic Regression Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEncoding{UTF-8}
+bibliography: ref.bib
 ---
 
 ```{r, include = FALSE}
@@ -14,7 +18,52 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Introduction
+
+The traditional score test approximates the null distribution using a normal distribution which depends only on the mean and the variance of the score statistic. The performance is especially poor when the underlying distribution is highly skewed, such as in unbalanced case-control outcomes, since normal approximation cannot incorporate higher moments such as skewness. Saddlepoint approximation is an improvement over the normal approximation. Contrary to normal approximation, where only the first two cumulants (mean and variance) are used to approximate the underlying distribution, saddlepoint approximation uses the entire cumulant generating function.
+
 ```{r setup}
 library(SPA)
-hello_world()
 ```
+
+# Model and Methods
+
+To relate genotypes to phenotypes, @dey2017fast use the following logistic regression model:
+$$\text{logit}[\Pr(Y_i=1\mid X_i,G_i)]=X_i^{\top}\beta+G_i\gamma,\,\text{for}\,i=1,\ldots,n.$$
+
+Consider every $i$, and test $H_0:\gamma=0$.
+
+1. Fit null model and get $\hat\mu_i$;
+
+2. Solve score statistic $S$ for $\gamma$;
+
+3. Use SPA, compute CGF $K(t)$ and its derivatives;
+
+4. Find distribution $\Pr(S<s)$ and p value.
+
+# Numerical Simulations
+
+Fit logistic model with different **MAF**, **ccratio**, **methods**.
+
+```{r out.width = '49%', fig.show = 'hold'}
+pval <- 0
+pval.NA <- 0
+alpha <- 0.01
+for (j in 1:1000) {
+  simu <- logistic_simulation(cases = 40, controls = 19960, maf = 0.05)
+  result <- logistic_spa(simu$genos, simu$pheno, simu$cov, minmac = 5, cutoff = 2, log.p = FALSE)
+  pval <- c(pval, result$p.value)
+  pval.NA <- c(pval.NA, result$p.value.NA)
+}
+pval<-pval[-1]
+pval.NA<-pval.NA[-1]
+print("ccratio = 0.2%, maf = 0.05")
+print("pval<alpha")
+length(pval[pval<alpha])/length(pval)
+print("pval.NA<alpha")
+length(pval.NA[pval.NA<alpha])/length(pval.NA)
+gg_qqplot(pval)
+gg_qqplot(pval.NA)
+```
+
+# Literature Cited

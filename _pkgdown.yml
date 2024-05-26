@@ -1,4 +1,4 @@
-url: ~
+url: https://jonathonchow.github.io/SPA/
 template:
   bootstrap: 5
-
+  bootswatch: litera
