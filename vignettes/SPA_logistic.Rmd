@@ -11,11 +11,11 @@ vignette: >
 bibliography: ref.bib
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+```{r include = FALSE}
+# knitr::opts_chunk$set(
+#   collapse = TRUE,
+#   comment = "#>"
+# )
 ```
 
 # Introduction
@@ -45,23 +45,25 @@ Consider every $i$, and test $H_0:\gamma=0$.
 
 Fit logistic model with different **MAF**, **ccratio**, **methods**.
 
-```{r out.width = '49%', fig.show = 'hold'}
+```{r}
 pval <- 0
 pval.NA <- 0
 alpha <- 0.01
-for (j in 1:1000) {
-  simu <- logistic_simulation(cases = 40, controls = 19960, maf = 0.05)
+for (j in 1:500) {
+  simu <- logistic_simulation(cases = 100, controls = 19900, maf = 0.005) # ccratio = 0.5%, maf = 0.005
   result <- logistic_spa(simu$genos, simu$pheno, simu$cov, minmac = 5, cutoff = 2, log.p = FALSE)
   pval <- c(pval, result$p.value)
   pval.NA <- c(pval.NA, result$p.value.NA)
 }
-pval<-pval[-1]
-pval.NA<-pval.NA[-1]
-print("ccratio = 0.2%, maf = 0.05")
-print("pval<alpha")
-length(pval[pval<alpha])/length(pval)
-print("pval.NA<alpha")
-length(pval.NA[pval.NA<alpha])/length(pval.NA)
+pval <- pval[-1]
+pval <- pval[!is.na(pval)]
+pval.NA <- pval.NA[-1]
+pval.NA <- pval.NA[!is.na(pval.NA)]
+```
+
+```{r out.width = '49%', fig.show = 'hold'}
+length(pval[pval < alpha]) / length(pval)
+length(pval.NA[pval.NA < alpha]) / length(pval.NA)
 gg_qqplot(pval)
 gg_qqplot(pval.NA)
 ```

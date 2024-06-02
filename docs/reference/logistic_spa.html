@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">SPA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/SPA_logistic.html">Saddlepoint Approximations Method in Logistic Regression Model</a>
+    <a class="dropdown-item" href="../articles/SPA_negbinom.html">Saddlepoint Approximations Method in Negative Binomial Generalized Linear Model</a>
   </div>
 </li>
 <li class="nav-item">
@@ -73,21 +74,51 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>log.p</dt>
-<dd></dd>
+    <dl><dt>genos</dt>
+<dd><p>A vector or matrix containing the genotypes. If matrix is provided then rows should correspond to SNPs and columns should correspond to subjects. Optional, but needed if <code>obj.null</code> is missing.</p></dd>
+
+
+<dt>pheno</dt>
+<dd><p>A vector containing the phenotypes. Optional, but needed if <code>obj.null</code> is missing.</p></dd>
+
+
+<dt>cov</dt>
+<dd><p>A matrix or data frame containing the covariates. Optional, but needed if <code>obj.null</code> is missing.</p></dd>
+
+
+<dt>obj.null</dt>
+<dd><p>An object of class "<code>logistic_null</code>". (Optional)</p></dd>
+
+
+<dt>minmac</dt>
+<dd><p>An integer denoting the minimum minor allele count threshold to run SPA test. Default value is 5.</p></dd>
+
+
+<dt>cutoff</dt>
+<dd><p>An integer denoting the standard deviation cutoff to be used. If the test statistic lies within the standard deviation cutoff of the mean, p-value based on traditional score test is returned. Default value is 2.</p></dd>
+
+
+<dt>log.p</dt>
+<dd><p>A Boolean value determines whether to return natural log-transformed p-values. Default value is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list.</p>
+<p>A list of p values.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Dey, Rounak, et al. "A fast and accurate algorithm to test for binary phenotypes and its application to PheWAS." The American Journal of Human Genetics 101.1 (2017): 37-49.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># See vignettes</span></span></span>
+<span class="r-in"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

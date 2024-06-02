@@ -1,0 +1,31 @@
+---
+title: "Saddlepoint Approximations Method in Negative Binomial Generalized Linear Model"
+author: "Jonathon Chow"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Saddlepoint Approximations Method in Negative Binomial Generalized Linear Model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEncoding{UTF-8}
+bibliography: ref.bib
+---
+
+```{r, include = FALSE}
+# knitr::opts_chunk$set(
+#   collapse = TRUE,
+#   comment = "#>"
+# )
+```
+
+# Introduction
+
+```{r setup}
+library(SPA)
+```
+
+# Model and Methods
+
+# Numerical Simulations
+
+# Literature Cited

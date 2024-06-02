@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">SPA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/SPA_logistic.html">Saddlepoint Approximations Method in Logistic Regression Model</a>
+    <a class="dropdown-item" href="../articles/SPA_negbinom.html">Saddlepoint Approximations Method in Negative Binomial Generalized Linear Model</a>
   </div>
 </li>
 <li class="nav-item">
@@ -66,32 +67,62 @@
 <span>  <span class="va">maf</span>,</span>
 <span>  X1prob1_case <span class="op">=</span> <span class="fl">0.7260159</span>,</span>
 <span>  X1prob1_control <span class="op">=</span> <span class="fl">0.4974979</span>,</span>
-<span>  samplerX2_given_Y0 <span class="op">=</span> <span class="fu">arscpp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/arscpp/man/ars.html" class="external-link">ars</a></span><span class="op">(</span>f <span class="op">=</span> <span class="va">Log_Dens_X2_given_Y0</span>, f_prime <span class="op">=</span></span>
-<span>    <span class="va">Log_Dens_X2_given_Y0_prime</span>, xlb <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>, xrb <span class="op">=</span> <span class="cn">Inf</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, beta0 <span class="op">=</span> <span class="op">-</span><span class="fl">5.6</span>,</span>
-<span>    prevalence <span class="op">=</span> <span class="fl">0.0109492</span><span class="op">)</span>,</span>
 <span>  samplerX2_given_Y1 <span class="op">=</span> <span class="fu">arscpp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/arscpp/man/ars.html" class="external-link">ars</a></span><span class="op">(</span>f <span class="op">=</span> <span class="va">Log_Dens_X2_given_Y1</span>, f_prime <span class="op">=</span></span>
 <span>    <span class="va">Log_Dens_X2_given_Y1_prime</span>, xlb <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>, xrb <span class="op">=</span> <span class="cn">Inf</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, beta0 <span class="op">=</span> <span class="op">-</span><span class="fl">5.6</span>,</span>
+<span>    prevalence <span class="op">=</span> <span class="fl">0.0109492</span><span class="op">)</span>,</span>
+<span>  samplerX2_given_Y0 <span class="op">=</span> <span class="fu">arscpp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/arscpp/man/ars.html" class="external-link">ars</a></span><span class="op">(</span>f <span class="op">=</span> <span class="va">Log_Dens_X2_given_Y0</span>, f_prime <span class="op">=</span></span>
+<span>    <span class="va">Log_Dens_X2_given_Y0_prime</span>, xlb <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>, xrb <span class="op">=</span> <span class="cn">Inf</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, beta0 <span class="op">=</span> <span class="op">-</span><span class="fl">5.6</span>,</span>
 <span>    prevalence <span class="op">=</span> <span class="fl">0.0109492</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>samplerX2_given_Y1</dt>
-<dd></dd>
+    <dl><dt>cases</dt>
+<dd><p>An integer denoting the number of cases.</p></dd>
+
+
+<dt>controls</dt>
+<dd><p>An integer denoting the number of controls.</p></dd>
+
+
+<dt>maf</dt>
+<dd><p>A real number denoting the minor allele frequency.</p></dd>
+
+
+<dt>X1prob1_case</dt>
+<dd><p>A real number denoting the probability of X1 = 1 given Y1 = 1.</p></dd>
+
+
+<dt>X1prob1_control</dt>
+<dd><p>A real number denoting the probability of X1 = 1 given Y1 = 0.</p></dd>
+
+
+<dt>samplerX2_given_Y1</dt>
+<dd><p>An output of function <code><a href="https://rdrr.io/pkg/arscpp/man/ars.html" class="external-link">arscpp::ars</a></code> denoting the sampler of X2 given Y1 = 1.</p></dd>
+
+
+<dt>samplerX2_given_Y0</dt>
+<dd><p>An output of function <code><a href="https://rdrr.io/pkg/arscpp/man/ars.html" class="external-link">arscpp::ars</a></code> denoting the sampler of X2 given Y1 = 0.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list.</p>
+<p>A list of simulated data.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Dey, Rounak, et al. "A fast and accurate algorithm to test for binary phenotypes and its application to PheWAS." The American Journal of Human Genetics 101.1 (2017): 37-49.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># See vignettes</span></span></span>
+<span class="r-in"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -1,7 +1,7 @@
 #' @title Draw QQ plot
 #'
-#' @description Draw QQ plot for p value.
-#' 
+#' @description Draw QQ plot for p values.
+#'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_ribbon
 #' @importFrom ggplot2 geom_point
@@ -11,17 +11,19 @@
 #' @importFrom ggplot2 theme_bw
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 aes
-#' @importFrom ggplot2 element_line
 #' @importFrom ggplot2 element_blank
+#' @importFrom stats ppoints
+#' @importFrom stats qbeta
 #'
-#' @param ps
-#' @param ci
+#' @param ps A vector in which each element is an observed p value.
+#' @param ci A parameter to control tolerance.
 #'
-#' @return A plot.
+#' @return A QQ plot of p values.
 #'
 #' @export
 #'
 #' @examples
+#' gg_qqplot(stats::runif(100, min = 0, max = 1))
 gg_qqplot <- function(ps, ci = 0.95) {
   n <- length(ps)
   df <- data.frame(
@@ -41,9 +43,6 @@ gg_qqplot <- function(ps, ci = 0.95) {
     geom_abline(intercept = 0, slope = 1, alpha = 0.5) +
     xlab(log10Pe) +
     ylab(log10Po) +
-  theme_bw(base_size = 24) +
-  theme(
-    axis.ticks = element_line(size = 0.5),
-    panel.grid = element_blank()
-  )
+    theme_bw() +
+    theme(panel.grid = element_blank())
 }

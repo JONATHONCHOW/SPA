@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">SPA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/SPA_logistic.html">Saddlepoint Approximations Method in Logistic Regression Model</a>
+    <a class="dropdown-item" href="../articles/SPA_negbinom.html">Saddlepoint Approximations Method in Negative Binomial Generalized Linear Model</a>
   </div>
 </li>
 <li class="nav-item">
@@ -77,7 +78,7 @@
       <img src="" class="logo" alt=""><h1>Saddlepoint Approximations Method in Logistic Regression Model</h1>
                         <h4 data-toc-skip class="author">Jonathon Chow</h4>
             
-            <h4 data-toc-skip class="date">2024-05-27</h4>
+            <h4 data-toc-skip class="date">2024-06-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/JONATHONCHOW/SPA/blob/HEAD/vignettes/SPA_logistic.Rmd" class="external-link"><code>vignettes/SPA_logistic.Rmd</code></a></small>
       <div class="d-none name"><code>SPA_logistic.Rmd</code></div>
@@ -112,27 +113,26 @@
 <code class="sourceCode R"><span><span class="va">pval</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="va">pval.NA</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">simu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logistic_simulation.html">logistic_simulation</a></span><span class="op">(</span>cases <span class="op">=</span> <span class="fl">40</span>, controls <span class="op">=</span> <span class="fl">19960</span>, maf <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">500</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">simu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logistic_simulation.html">logistic_simulation</a></span><span class="op">(</span>cases <span class="op">=</span> <span class="fl">100</span>, controls <span class="op">=</span> <span class="fl">19900</span>, maf <span class="op">=</span> <span class="fl">0.005</span><span class="op">)</span> <span class="co"># ccratio = 0.5%, maf = 0.005</span></span>
 <span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/logistic_spa.html">logistic_spa</a></span><span class="op">(</span><span class="va">simu</span><span class="op">$</span><span class="va">genos</span>, <span class="va">simu</span><span class="op">$</span><span class="va">pheno</span>, <span class="va">simu</span><span class="op">$</span><span class="va">cov</span>, minmac <span class="op">=</span> <span class="fl">5</span>, cutoff <span class="op">=</span> <span class="fl">2</span>, log.p <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="va">pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pval</span>, <span class="va">result</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span>
 <span>  <span class="va">pval.NA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pval.NA</span>, <span class="va">result</span><span class="op">$</span><span class="va">p.value.NA</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="va">pval</span><span class="op">&lt;-</span><span class="va">pval</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">pval.NA</span><span class="op">&lt;-</span><span class="va">pval.NA</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"ccratio = 0.2%, maf = 0.05"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "ccratio = 0.2%, maf = 0.05"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"pval&lt;alpha"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "pval&lt;alpha"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval</span><span class="op">[</span><span class="va">pval</span><span class="op">&lt;</span><span class="va">alpha</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.011</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"pval.NA&lt;alpha"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "pval.NA&lt;alpha"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval.NA</span><span class="op">[</span><span class="va">pval.NA</span><span class="op">&lt;</span><span class="va">alpha</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval.NA</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.014</span></span>
-<span><span class="fu"><a href="../reference/gg_qqplot.html">gg_qqplot</a></span><span class="op">(</span><span class="va">pval</span><span class="op">)</span></span>
+<span><span class="va">pval</span> <span class="op">&lt;-</span> <span class="va">pval</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">pval</span> <span class="op">&lt;-</span> <span class="va">pval</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">pval</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">pval.NA</span> <span class="op">&lt;-</span> <span class="va">pval.NA</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">pval.NA</span> <span class="op">&lt;-</span> <span class="va">pval.NA</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">pval.NA</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval</span><span class="op">[</span><span class="va">pval</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.004</span></span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval.NA</span><span class="op">[</span><span class="va">pval.NA</span> <span class="op">&lt;</span> <span class="va">alpha</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pval.NA</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.008</span></span></code></pre>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/gg_qqplot.html">gg_qqplot</a></span><span class="op">(</span><span class="va">pval</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/gg_qqplot.html">gg_qqplot</a></span><span class="op">(</span><span class="va">pval.NA</span><span class="op">)</span></span></code></pre></div>
-<p><img src="SPA_logistic_files/figure-html/unnamed-chunk-2-1.png" width="49%"><img src="SPA_logistic_files/figure-html/unnamed-chunk-2-2.png" width="49%"></p>
+<p><img src="SPA_logistic_files/figure-html/unnamed-chunk-3-1.png" width="49%"><img src="SPA_logistic_files/figure-html/unnamed-chunk-3-2.png" width="49%"></p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="literature-cited">Literature Cited<a class="anchor" aria-label="anchor" href="#literature-cited"></a>

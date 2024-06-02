@@ -1,22 +1,25 @@
 #' @title Simulations in logistic regression
 #'
 #' @description Numerical simulations in logistic regression model.
+#' 
+#' @importFrom stats rbinom
 #'
-#' @param cases
-#' @param controls
-#' @param maf
-#' @param X1prob1_case
-#' @param X1prob1_control
-#' @param samplerX2_given_Y0
-#' @param samplerX2_given_Y1
+#' @param cases An integer denoting the number of cases.
+#' @param controls An integer denoting the number of controls.
+#' @param maf A real number denoting the minor allele frequency.
+#' @param X1prob1_case A real number denoting the probability of X1 = 1 given Y1 = 1.
+#' @param X1prob1_control A real number denoting the probability of X1 = 1 given Y1 = 0.
+#' @param samplerX2_given_Y1 An output of function \code{arscpp::ars} denoting the sampler of X2 given Y1 = 1.
+#' @param samplerX2_given_Y0 An output of function \code{arscpp::ars} denoting the sampler of X2 given Y1 = 0.
 #'
-#' @return A list.
+#' @return A list of simulated data.
 #'
 #' @export
 #'
 #' @examples
+#' # See vignettes
 #' @references Dey, Rounak, et al. "A fast and accurate algorithm to test for binary phenotypes and its application to PheWAS." The American Journal of Human Genetics 101.1 (2017): 37-49.
-logistic_simulation <- function(cases, controls, maf, X1prob1_case = 0.7260159, X1prob1_control = 0.4974979, samplerX2_given_Y0 = arscpp::ars(f = Log_Dens_X2_given_Y0, f_prime = Log_Dens_X2_given_Y0_prime, xlb = -Inf, xrb = Inf, x = c(-2, 0, 2), beta0 = -5.6, prevalence = 0.0109492), samplerX2_given_Y1 = arscpp::ars(f = Log_Dens_X2_given_Y1, f_prime = Log_Dens_X2_given_Y1_prime, xlb = -Inf, xrb = Inf, x = c(-2, 0, 2), beta0 = -5.6, prevalence = 0.0109492)) {
+logistic_simulation <- function(cases, controls, maf, X1prob1_case = 0.7260159, X1prob1_control = 0.4974979, samplerX2_given_Y1 = arscpp::ars(f = Log_Dens_X2_given_Y1, f_prime = Log_Dens_X2_given_Y1_prime, xlb = -Inf, xrb = Inf, x = c(-2, 0, 2), beta0 = -5.6, prevalence = 0.0109492), samplerX2_given_Y0 = arscpp::ars(f = Log_Dens_X2_given_Y0, f_prime = Log_Dens_X2_given_Y0_prime, xlb = -Inf, xrb = Inf, x = c(-2, 0, 2), beta0 = -5.6, prevalence = 0.0109492)) {
   N <- cases + controls
   ccratio <- cases / N
 
@@ -37,6 +40,7 @@ Log_Dens_X2_given_Y1_prime <- function(x, beta0, prevalence) {
 }
 
 # Log density of X2 given Y1 = 0
+#' @importFrom stats dnorm
 Log_Dens_X2_given_Y0 <- function(x, beta0, prevalence) {
   return(log((dnorm(x) - 0.5 * (1 / (1 + exp(-beta0 - x))) * (sqrt(1 / (2 * pi))) * exp(-0.5 * x^2) - 0.5 * (1 / (1 + exp(-beta0 - 1 - x))) * (sqrt(1 / (2 * pi))) * exp(-0.5 * x^2)) / (1 - prevalence)))
 }

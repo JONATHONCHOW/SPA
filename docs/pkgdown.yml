@@ -4,7 +4,8 @@ pkgdown_sha: ~
 articles:
   SPA: SPA.html
   SPA_logistic: SPA_logistic.html
-last_built: 2024-05-26T17:07Z
+  SPA_negbinom: SPA_negbinom.html
+last_built: 2024-06-02T20:18Z
 urls:
   reference: https://jonathonchow.github.io/SPA/reference
   article: https://jonathonchow.github.io/SPA/articles

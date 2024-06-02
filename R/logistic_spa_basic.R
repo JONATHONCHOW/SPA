@@ -4,25 +4,27 @@
 #'
 #' @description Basic saddlepoint approximation method in logistic regression model.
 #'
-#' @param genos
-#' @param pheno
-#' @param cov
-#' @param minmac
-#' @param cutoff
-#' @param log.p
+#' @param genos A vector or matrix containing the genotypes. If matrix is provided then rows should correspond to SNPs and columns should correspond to subjects. Optional, but needed if \code{obj.null} is missing.
+#' @param pheno A vector containing the phenotypes. Optional, but needed if \code{obj.null} is missing.
+#' @param cov A matrix or data frame containing the covariates. Optional, but needed if \code{obj.null} is missing.
+#' @param obj.null An object of class "\code{logistic_null}". (Optional)
+#' @param minmac An integer denoting the minimum minor allele count threshold to run SPA test. Default value is 5.
+#' @param cutoff An integer denoting the standard deviation cutoff to be used. If the test statistic lies within the standard deviation cutoff of the mean, p-value based on traditional score test is returned. Default value is 2.
+#' @param log.p A Boolean value determines whether to return natural log-transformed p-values. Default value is \code{FALSE}.
 #'
-#' @return A list.
+#' @return A list of p values.
 #'
 #' @export
 #'
 #' @examples
+#' # See vignettes
 #' @references Dey, Rounak, et al. "A fast and accurate algorithm to test for binary phenotypes and its application to PheWAS." The American Journal of Human Genetics 101.1 (2017): 37-49.
 logistic_spa <- function(genos, pheno, cov, obj.null, minmac = 5, cutoff = 2, log.p = FALSE) {
   if (missing(obj.null)) {
     if (missing(cov) || is.null(cov)) {
       cov <- rep(1, length(pheno))
     }
-    obj.null <- fit_null(as.matrix(pheno) ~ as.matrix(cov))
+    obj.null <- logistic_fit_null(as.matrix(pheno) ~ as.matrix(cov))
   }
   cov <- obj.null$X1
   pheno <- obj.null$y
@@ -46,7 +48,7 @@ logistic_spa <- function(genos, pheno, cov, obj.null, minmac = 5, cutoff = 2, lo
       }
       MAC <- min(sum(genos[i, ]), sum(2 - genos[i, ]))
       if (MAC >= minmac) {
-        re <- score_test(as.vector(genos[i, , drop = FALSE]), obj.null, cutoff = cutoff, log.p = log.p)
+        re <- logistic_score_test(as.vector(genos[i, , drop = FALSE]), obj.null, cutoff = cutoff, log.p = log.p)
 
         p.value[i] <- re$p.value
         p.value.NA[i] <- re$p.value.NA
@@ -61,7 +63,7 @@ logistic_spa <- function(genos, pheno, cov, obj.null, minmac = 5, cutoff = 2, lo
 
 # Fit null model
 
-X1_adj <- function(X1) {
+logistic_X1_adj <- function(X1) {
   q1 <- ncol(X1)
   if (q1 >= 2) {
     if (sum(abs(X1[, 1] - X1[, 2])) == 0) {
@@ -79,9 +81,9 @@ X1_adj <- function(X1) {
 
 #' @importFrom stats model.matrix
 #' @importFrom stats glm
-fit_null <- function(formula, data = NULL) {
+logistic_fit_null <- function(formula, data = NULL) {
   X1 <- model.matrix(formula, data = data)
-  X1 <- X1_adj(X1)
+  X1 <- logistic_X1_adj(X1)
 
   glmfit <- glm(formula, data = data, family = "binomial")
   mu <- glmfit$fitted.values
@@ -93,14 +95,14 @@ fit_null <- function(formula, data = NULL) {
   XXVX_inv <- X1 %*% XVX_inv
 
   re <- list(y = glmfit$y, mu = mu, res = res, V = V, X1 = X1, XV = XV, XXVX_inv = XXVX_inv)
-  class(re) <- "SA_NULL"
+  class(re) <- "logistic_null"
 
   return(re)
 }
 
 # Compute CGF function
 
-K0 <- function(t, mu, g) {
+logistic_K0 <- function(t, mu, g) {
   n.t <- length(t)
   out <- rep(0, n.t)
 
@@ -113,7 +115,7 @@ K0 <- function(t, mu, g) {
   return(out)
 }
 
-K1 <- function(t, mu, g, q) {
+logistic_K1 <- function(t, mu, g, q) {
   n.t <- length(t)
   out <- rep(0, n.t)
 
@@ -127,7 +129,7 @@ K1 <- function(t, mu, g, q) {
   return(out)
 }
 
-K2 <- function(t, mu, g) {
+logistic_K2 <- function(t, mu, g) {
   n.t <- length(t)
   out <- rep(0, n.t)
 
@@ -141,7 +143,7 @@ K2 <- function(t, mu, g) {
   return(out)
 }
 
-get_root <- function(init, mu, g, q, tol = .Machine$double.eps^0.25, maxiter = 1000) {
+logistic_get_root <- function(init, mu, g, q, tol = .Machine$double.eps^0.25, maxiter = 1000) {
   g.pos <- sum(g[which(g > 0)])
   g.neg <- sum(g[which(g < 0)])
 
@@ -149,11 +151,11 @@ get_root <- function(init, mu, g, q, tol = .Machine$double.eps^0.25, maxiter = 1
     return(list(root = Inf, n.iter = 0, Is.converge = TRUE))
   } else {
     t <- init
-    K1_eval <- K1(t, mu, g, q)
+    K1_eval <- logistic_K1(t, mu, g, q)
     prevJump <- Inf
     rep <- 1
-    repeat                {
-      K2_eval <- K2(t, mu, g)
+    repeat {
+      K2_eval <- logistic_K2(t, mu, g)
       tnew <- t - K1_eval / K2_eval
       if (is.na(tnew)) {
         conv <- FALSE
@@ -168,11 +170,11 @@ get_root <- function(init, mu, g, q, tol = .Machine$double.eps^0.25, maxiter = 1
         break
       }
 
-      newK1 <- K1(tnew, mu, g, q)
+      newK1 <- logistic_K1(tnew, mu, g, q)
       if (sign(K1_eval) != sign(newK1)) {
         if (abs(tnew - t) > prevJump - tol) {
           tnew <- t + sign(newK1 - K1_eval) * prevJump / 2
-          newK1 <- K1(tnew, mu, g, q)
+          newK1 <- logistic_K1(tnew, mu, g, q)
           prevJump <- prevJump / 2
         } else {
           prevJump <- abs(tnew - t)
@@ -188,9 +190,9 @@ get_root <- function(init, mu, g, q, tol = .Machine$double.eps^0.25, maxiter = 1
 }
 
 #' @importFrom stats pnorm
-get_prob <- function(zeta, mu, g, q, log.p = FALSE) {
-  k1 <- K0(zeta, mu, g)
-  k2 <- K2(zeta, mu, g)
+logistic_get_prob <- function(zeta, mu, g, q, log.p = FALSE) {
+  k1 <- logistic_K0(zeta, mu, g)
+  k2 <- logistic_K2(zeta, mu, g)
 
   if (is.finite(k1) && is.finite(k2)) {
     temp1 <- zeta * q - k1
@@ -222,7 +224,7 @@ get_prob <- function(zeta, mu, g, q, log.p = FALSE) {
 
 # Compute p value
 
-add_logp <- function(p1, p2) {
+logistic_add_logp <- function(p1, p2) {
   p1 <- -abs(p1)
   p2 <- -abs(p2)
   maxp <- max(p1, p2)
@@ -232,7 +234,7 @@ add_logp <- function(p1, p2) {
 }
 
 #' @importFrom stats pchisq
-get_pvalue <- function(q, mu, g, cutoff = 2, log.p = FALSE) {
+logistic_get_pvalue <- function(q, mu, g, cutoff = 2, log.p = FALSE) {
   m1 <- sum(mu * g)
   var1 <- sum(mu * (1 - mu) * g^2)
   p1 <- NULL
@@ -250,17 +252,17 @@ get_pvalue <- function(q, mu, g, cutoff = 2, log.p = FALSE) {
   if (abs(q - m1) / sqrt(var1) < cutoff) {
     pval <- pval.noadj
   } else {
-    out.uni1 <- get_root(0, mu = mu, g = g, q = q)
-    out.uni2 <- get_root(0, mu = mu, g = g, q = qinv)
+    out.uni1 <- logistic_get_root(0, mu = mu, g = g, q = q)
+    out.uni2 <- logistic_get_root(0, mu = mu, g = g, q = qinv)
     if (out.uni1$Is.converge == TRUE && out.uni2$Is.converge == TRUE) {
-      p1 <- tryCatch(get_prob(out.uni1$root, mu, g, q, log.p = log.p), error = function(e) {
+      p1 <- tryCatch(logistic_get_prob(out.uni1$root, mu, g, q, log.p = log.p), error = function(e) {
         if (log.p) {
           return(pval.noadj - log(2))
         } else {
           return(pval.noadj / 2)
         }
       })
-      p2 <- tryCatch(get_prob(out.uni2$root, mu, g, qinv, log.p = log.p), error = function(e) {
+      p2 <- tryCatch(logistic_get_prob(out.uni2$root, mu, g, qinv, log.p = log.p), error = function(e) {
         if (log.p) {
           return(pval.noadj - log(2))
         } else {
@@ -268,7 +270,7 @@ get_pvalue <- function(q, mu, g, cutoff = 2, log.p = FALSE) {
         }
       })
       if (log.p) {
-        pval <- add_logp(p1, p2)
+        pval <- logistic_add_logp(p1, p2)
       } else {
         pval <- abs(p1) + abs(p2)
       }
@@ -281,15 +283,15 @@ get_pvalue <- function(q, mu, g, cutoff = 2, log.p = FALSE) {
   }
 
   if (pval != 0 && pval.noadj / pval > 10^3) {
-    return(get_pvalue(q, mu, g, cutoff = cutoff * 2, log.p = log.p))
+    return(logistic_get_pvalue(q, mu, g, cutoff = cutoff * 2, log.p = log.p))
   } else {
     return(list(p.value = pval, p.value.NA = pval.noadj, Is.converge = Is.converge, score = score))
   }
 }
 
-score_test <- function(G, obj.null, cutoff = 2, log.p = FALSE) {
-  if (class(obj.null) != "SA_NULL") {
-    stop("obj.null should be a returned object from fit_null")
+logistic_score_test <- function(G, obj.null, cutoff = 2, log.p = FALSE) {
+  if (class(obj.null) != "logistic_null") {
+    stop("obj.null should be a returned object from logistic_fit_null")
   }
 
   y <- obj.null$y
@@ -303,7 +305,7 @@ score_test <- function(G, obj.null, cutoff = 2, log.p = FALSE) {
   }
   G1 <- G - obj.null$XXVX_inv %*% (obj.null$XV %*% G)
   q <- sum(G1 * y)
-  out <- get_pvalue(q, mu = mu, g = G1, cutoff = cutoff, log.p = log.p)
+  out <- logistic_get_pvalue(q, mu = mu, g = G1, cutoff = cutoff, log.p = log.p)
 
   return(out)
 }

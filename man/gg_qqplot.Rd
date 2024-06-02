@@ -7,11 +7,16 @@
 gg_qqplot(ps, ci = 0.95)
 }
 \arguments{
-\item{ci}{}
+\item{ps}{A vector in which each element is an observed p value.}
+
+\item{ci}{A parameter to control tolerance.}
 }
 \value{
-A plot.
+A QQ plot of p values.
 }
 \description{
-Draw QQ plot for p value.
+Draw QQ plot for p values.
+}
+\examples{
+gg_qqplot(stats::runif(100, min = 0, max = 1))
 }

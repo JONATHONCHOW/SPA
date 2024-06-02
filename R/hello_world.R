@@ -6,7 +6,8 @@
 #'
 #' @export
 #'
-#' @examples hello_world()
+#' @examples
+#' hello_world()
 hello_world <- function() {
   print("Data science is fantastic!")
 }

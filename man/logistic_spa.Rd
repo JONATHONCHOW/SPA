@@ -15,13 +15,28 @@ logistic_spa(
 )
 }
 \arguments{
-\item{log.p}{}
+\item{genos}{A vector or matrix containing the genotypes. If matrix is provided then rows should correspond to SNPs and columns should correspond to subjects. Optional, but needed if \code{obj.null} is missing.}
+
+\item{pheno}{A vector containing the phenotypes. Optional, but needed if \code{obj.null} is missing.}
+
+\item{cov}{A matrix or data frame containing the covariates. Optional, but needed if \code{obj.null} is missing.}
+
+\item{obj.null}{An object of class "\code{logistic_null}". (Optional)}
+
+\item{minmac}{An integer denoting the minimum minor allele count threshold to run SPA test. Default value is 5.}
+
+\item{cutoff}{An integer denoting the standard deviation cutoff to be used. If the test statistic lies within the standard deviation cutoff of the mean, p-value based on traditional score test is returned. Default value is 2.}
+
+\item{log.p}{A Boolean value determines whether to return natural log-transformed p-values. Default value is \code{FALSE}.}
 }
 \value{
-A list.
+A list of p values.
 }
 \description{
 Basic saddlepoint approximation method in logistic regression model.
+}
+\examples{
+# See vignettes
 }
 \references{
 Dey, Rounak, et al. "A fast and accurate algorithm to test for binary phenotypes and its application to PheWAS." The American Journal of Human Genetics 101.1 (2017): 37-49.
