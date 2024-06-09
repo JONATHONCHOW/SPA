@@ -4,12 +4,43 @@
 \alias{gg_qqplot}
 \title{Draw QQ plot}
 \usage{
-gg_qqplot(ps, ci = 0.95)
+gg_qqplot(
+  ps1,
+  ps2 = NULL,
+  ps3 = NULL,
+  ps4 = NULL,
+  ps5 = NULL,
+  ps6 = NULL,
+  methods = NULL,
+  ci = 0.95,
+  p_hline = NULL,
+  plot_title = NULL,
+  plot_colors = c(aa = "firebrick3", bb = "hotpink2", cc = "darkslategray4", dd =
+    "royalblue4", ee = "darkslategray4", ff = "magenta4")
+)
 }
 \arguments{
-\item{ps}{A vector in which each element is an observed p value.}
+\item{ps1}{A vector in which each element is an observed p value.}
+
+\item{ps2}{A vector in which each element is an observed p value.}
+
+\item{ps3}{A vector in which each element is an observed p value.}
+
+\item{ps4}{A vector in which each element is an observed p value.}
+
+\item{ps5}{A vector in which each element is an observed p value.}
+
+\item{ps6}{A vector in which each element is an observed p value.}
+
+\item{methods}{A column of strings representing the methods.}
 
 \item{ci}{A parameter to control tolerance.}
+
+\item{p_hline}{A parameter to display a reasonable range of p values.}
+
+\item{plot_title}{A string representing the title.}
+
+\item{plot_colors}{A column of strings representing the colors.}
 }
 \value{
 A QQ plot of p values.
@@ -18,5 +49,12 @@ A QQ plot of p values.
 Draw QQ plot for p values.
 }
 \examples{
-gg_qqplot(stats::runif(100, min = 0, max = 1))
+ps1 <- stats::runif(100, min = 0, max = 1)
+ps2 <- stats::runif(200, min = 0, max = 1)
+ps3 <- stats::runif(300, min = 0, max = 1)
+ps4 <- stats::runif(100, min = 0, max = 1)
+ps5 <- stats::runif(200, min = 0, max = 1)
+ps6 <- stats::runif(300, min = 0, max = 1)
+gg_qqplot(ps1)
+gg_qqplot(ps1, ps2, ps3, ps4, ps5, ps6, methods = c("a", "b", "c", "d", "e", "f"), p_hline = 0.01, plot_title = "FUN")
 }

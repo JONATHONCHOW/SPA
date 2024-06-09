@@ -1,20 +1,86 @@
 ---
 title: "SPA"
-output: rmarkdown::html_vignette
+author: "Jonathon Chow"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    css: columns.css
 vignette: >
   %\VignetteIndexEntry{SPA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: ref.bib
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+**Comparison of SPA Between Logistic Regression and NB GLM**
 
-```{r setup}
-library(SPA)
-hello_world()
-```
+:::::: {.cols data-latex=""}
+
+::: {.col data-latex="{0.475\textwidth}"}
+Logistic regression model:
+$$Y_i\sim\mathbf{Bern}(\mu_i),\,\text{logit}(\mu_i)=\gamma G_i+\beta^{\top}X_i.$$
+
+The goal is to test the null hypothesis $H_0:\,\gamma=0$. Under the null hypothesis, the fitted model obtains the estimated parameters $\hat{\mu}_i$.
+
+A score statistic for $gamma$ from the model is given by
+$$\begin{aligned}
+S&=G^{\top}(Y-\hat{\mu})\\
+&=(G-X(X^{\top}WX)^{-1}X^{\top}WG)^{\top}(Y-\hat{\mu})\\
+&=\sum_{i=1}^n \tilde{G}_i(Y_i-\hat{\mu}_i),
+\end{aligned}$$
+where
+$$W=\text{diag}(\cdots,\hat{\mu}_i(1-\hat{\mu}_i),\cdots),$$
+$$\tilde{G}=G-X(X^{\top}WX)^{-1}X^{\top}WG.$$
+
+The traditional score test approximates the null distribution using a normal distribution
+$$\mathbf{N}(0,G^{\top}WG-G^{\top}WX(X^{\top}WX)^{-1}X^{\top}WG).$$
+
+The saddlepoint approximation uses the cumulant-generating fuction of the score statistic $S$ and its first- and second-order derivatives:
+$$K(t)=\sum_{i=1}^n\log\left(1-\hat{\mu}_i+\hat{\mu}_ie^{\tilde{G}_it}\right)-t\sum_{i=1}^n\tilde{G}_i\hat{\mu}_i,$$
+$$K^{\prime}(t)=\sum_{i=1}^n\frac{\hat{\mu}_i\tilde{G}_i}{(1-\hat{\mu}_i)e^{-\tilde{G}_it}+\hat{\mu}_i}-\sum_{i=1}^n\tilde{G}_i\hat{\mu}_i,$$
+$$K^{\prime\prime}(t)=\sum_{i=1}^n\frac{(1-\hat{\mu}_i)\hat{\mu}_i\tilde{G}_i^2e^{-\tilde{G}_it}}{\left[(1-\hat{\mu}_i)e^{-\tilde{G}_it}+\hat{\mu}_i\right]^2}.$$
+
+The distribution of $S$ at $s$ is
+$$\Pr(S<s)=\Phi\left\{w+\frac{1}{w}\log\left(\frac{v}{w}\right)\right\},$$
+where $w=sgn(\hat{t})\sqrt{2(\hat{t}s-K(\hat{t}))}$, $v=\hat{t}\sqrt{k^{\prime\prime}(\hat{t})}$, $\hat{t}$ is the solution to the equation $K^{\prime}(t)=0$, and $\Phi$ is the distribution function of a standard normal distribution.
+
+:::
+
+::: {.col data-latex="{0.05\textwidth}"}
+\ 
+<!-- an empty Div (with a white space), serving as
+a column separator -->
+:::
+
+::: {.col data-latex="{0.475\textwidth}"}
+NB generalized linear model:
+
+$$Y_i\sim\mathbf{NB}_{\theta}(\mu_i),\,\log(\mu_i)=\gamma X_i+\beta^{\top}Z_i.$$
+
+The goal is to test the null hypothesis $H_0:\,\gamma=0$. Under the null hypothesis, the fitted model obtains the estimated parameters $\hat{\mu}_i$ and $\hat{\theta}$.
+
+A score statistic for $gamma$ from the model is given by
+$$\begin{aligned}
+S&=X^{\top}WM(Y-\hat{\mu})\\
+&=\sum_{i=1}^n X_i\frac{\hat{\mu}_i}{1+\frac{\hat{\mu}_i}{\hat{\theta}}}\frac{1}{\hat{\mu}_i}(Y_i-\hat{\mu}_i)\\
+&=\sum_{i=1}^n X_ip_i(Y_i-\hat{\mu}_i),
+\end{aligned}$$
+where
+$$W=\text{diag}\left(\cdots,\frac{\hat{\mu}_i}{1+\frac{\hat{\mu}_i}{\hat{\theta}}},\cdots\right),$$
+$$M=\text{diag}\left(\cdots,\frac{1}{\hat{\mu}_i},\cdots\right),$$
+$$p_i=\frac{\hat{\theta}}{\hat{\theta}+\hat{\mu}_i}.$$
+
+The traditional score test approximates the null distribution using a normal distribution
+$$\mathbf{N}(0,X^{\top}WX-X^{\top}WZ(Z^{\top}WZ)^{-1}Z^{\top}WX).$$
+
+The saddlepoint approximation uses the cumulant-generating fuction of the score statistic $S$ and its first- and second-order derivatives:
+$$K(t)=\hat{\theta}\sum_{i=1}^n\log\left(\frac{p_i}{1-(1-p_i)e^{X_ip_it}}\right)-t\sum_{i=1}^nX_i\hat{\mu}_ip_i,$$
+$$K^{\prime}(t)=\hat{\theta}\sum_{i=1}^n\frac{(1-p_i)e^{X_ip_it}X_ip_i}{1-(1-p_i)e^{X_ip_it}}-\sum_{i=1}^nX_i\hat{\mu}_ip_i,$$
+$$K^{\prime\prime}(t)=\hat{\theta}\sum_{i=1}^n\frac{(1-p_i)e^{X_ip_it}X_i^2p_i^2}{\left[1-(1-p_i)e^{X_ip_it}\right]^2}.$$
+
+The distribution of $S$ at $s$ is
+$$\Pr(S<s)=\Phi\left\{w+\frac{1}{w}\log\left(\frac{v}{w}\right)\right\},$$
+where $w=sgn(\hat{t})\sqrt{2(\hat{t}s-K(\hat{t}))}$, $v=\hat{t}\sqrt{k^{\prime\prime}(\hat{t})}$, $\hat{t}$ is the solution to the equation $K^{\prime}(t)=0$, and $\Phi$ is the distribution function of a standard normal distribution.
+
+:::
+::::::

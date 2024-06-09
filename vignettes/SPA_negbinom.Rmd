@@ -7,11 +7,10 @@ vignette: >
   %\VignetteIndexEntry{Saddlepoint Approximations Method in Negative Binomial Generalized Linear Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteEncoding{UTF-8}
 bibliography: ref.bib
 ---
 
-```{r, include = FALSE}
+```{r include = FALSE}
 # knitr::opts_chunk$set(
 #   collapse = TRUE,
 #   comment = "#>"
@@ -25,6 +24,8 @@ library(SPA)
 ```
 
 # Model and Methods
+
+$$Y_i\sim\mathbf{NB}_{\theta}(\mu_i),\,\log(\mu_i)=\gamma X_i+\beta^{\top}Z_i.$$
 
 # Numerical Simulations
 

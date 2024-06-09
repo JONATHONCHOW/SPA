@@ -76,7 +76,9 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>SPA</h1>
+                        <h4 data-toc-skip class="author">Jonathon Chow</h4>
             
+            <h4 data-toc-skip class="date">2024-06-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/JONATHONCHOW/SPA/blob/HEAD/vignettes/SPA.Rmd" class="external-link"><code>vignettes/SPA.Rmd</code></a></small>
       <div class="d-none name"><code>SPA.Rmd</code></div>
@@ -84,11 +86,40 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JONATHONCHOW/SPA" class="external-link">SPA</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/hello_world.html">hello_world</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Data science is fantastic!"</span></span></code></pre></div>
-  </main>
+<p><strong>Comparison of SPA Between Logistic Regression and NB GLM</strong></p>
+<div class="cols">
+<div class="col">
+<p>Logistic regression model: <span class="math display">\[Y_i\sim\mathbf{Bern}(\mu_i),\,\text{logit}(\mu_i)=\gamma G_i+\beta^{\top}X_i.\]</span></p>
+<p>The goal is to test the null hypothesis <span class="math inline">\(H_0:\,\gamma=0\)</span>. Under the null hypothesis, the fitted model obtains the estimated parameters <span class="math inline">\(\hat{\mu}_i\)</span>.</p>
+<p>A score statistic for <span class="math inline">\(gamma\)</span> from the model is given by <span class="math display">\[\begin{aligned}
+S&amp;=G^{\top}(Y-\hat{\mu})\\
+&amp;=(G-X(X^{\top}WX)^{-1}X^{\top}WG)^{\top}(Y-\hat{\mu})\\
+&amp;=\sum_{i=1}^n \tilde{G}_i(Y_i-\hat{\mu}_i),
+\end{aligned}\]</span> where <span class="math display">\[W=\text{diag}(\cdots,\hat{\mu}_i(1-\hat{\mu}_i),\cdots),\]</span> <span class="math display">\[\tilde{G}=G-X(X^{\top}WX)^{-1}X^{\top}WG.\]</span></p>
+<p>The traditional score test approximates the null distribution using a normal distribution <span class="math display">\[\mathbf{N}(0,G^{\top}WG-G^{\top}WX(X^{\top}WX)^{-1}X^{\top}WG).\]</span></p>
+<p>The saddlepoint approximation uses the cumulant-generating fuction of the score statistic <span class="math inline">\(S\)</span> and its first- and second-order derivatives: <span class="math display">\[K(t)=\sum_{i=1}^n\log\left(1-\hat{\mu}_i+\hat{\mu}_ie^{\tilde{G}_it}\right)-t\sum_{i=1}^n\tilde{G}_i\hat{\mu}_i,\]</span> <span class="math display">\[K^{\prime}(t)=\sum_{i=1}^n\frac{\hat{\mu}_i\tilde{G}_i}{(1-\hat{\mu}_i)e^{-\tilde{G}_it}+\hat{\mu}_i}-\sum_{i=1}^n\tilde{G}_i\hat{\mu}_i,\]</span> <span class="math display">\[K^{\prime\prime}(t)=\sum_{i=1}^n\frac{(1-\hat{\mu}_i)\hat{\mu}_i\tilde{G}_i^2e^{-\tilde{G}_it}}{\left[(1-\hat{\mu}_i)e^{-\tilde{G}_it}+\hat{\mu}_i\right]^2}.\]</span></p>
+<p>The distribution of <span class="math inline">\(S\)</span> at <span class="math inline">\(s\)</span> is <span class="math display">\[\Pr(S&lt;s)=\Phi\left\{w+\frac{1}{w}\log\left(\frac{v}{w}\right)\right\},\]</span> where <span class="math inline">\(w=sgn(\hat{t})\sqrt{2(\hat{t}s-K(\hat{t}))}\)</span>, <span class="math inline">\(v=\hat{t}\sqrt{k^{\prime\prime}(\hat{t})}\)</span>, <span class="math inline">\(\hat{t}\)</span> is the solution to the equation <span class="math inline">\(K^{\prime}(t)=0\)</span>, and <span class="math inline">\(\Phi\)</span> is the distribution function of a standard normal distribution.</p>
+</div>
+<div class="col">
+<p>  <!-- an empty Div (with a white space), serving as
+a column separator --></p>
+</div>
+<div class="col">
+<p>NB generalized linear model:</p>
+<p><span class="math display">\[Y_i\sim\mathbf{NB}_{\theta}(\mu_i),\,\log(\mu_i)=\gamma X_i+\beta^{\top}Z_i.\]</span></p>
+<p>The goal is to test the null hypothesis <span class="math inline">\(H_0:\,\gamma=0\)</span>. Under the null hypothesis, the fitted model obtains the estimated parameters <span class="math inline">\(\hat{\mu}_i\)</span> and <span class="math inline">\(\hat{\theta}\)</span>.</p>
+<p>A score statistic for <span class="math inline">\(gamma\)</span> from the model is given by <span class="math display">\[\begin{aligned}
+S&amp;=X^{\top}WM(Y-\hat{\mu})\\
+&amp;=\sum_{i=1}^n X_i\frac{\hat{\mu}_i}{1+\frac{\hat{\mu}_i}{\hat{\theta}}}\frac{1}{\hat{\mu}_i}(Y_i-\hat{\mu}_i)\\
+&amp;=\sum_{i=1}^n X_ip_i(Y_i-\hat{\mu}_i),
+\end{aligned}\]</span> where <span class="math display">\[W=\text{diag}\left(\cdots,\frac{\hat{\mu}_i}{1+\frac{\hat{\mu}_i}{\hat{\theta}}},\cdots\right),\]</span> <span class="math display">\[M=\text{diag}\left(\cdots,\frac{1}{\hat{\mu}_i},\cdots\right),\]</span> <span class="math display">\[p_i=\frac{\hat{\theta}}{\hat{\theta}+\hat{\mu}_i}.\]</span></p>
+<p>The traditional score test approximates the null distribution using a normal distribution <span class="math display">\[\mathbf{N}(0,X^{\top}WX-X^{\top}WZ(Z^{\top}WZ)^{-1}Z^{\top}WX).\]</span></p>
+<p>The saddlepoint approximation uses the cumulant-generating fuction of the score statistic <span class="math inline">\(S\)</span> and its first- and second-order derivatives: <span class="math display">\[K(t)=\hat{\theta}\sum_{i=1}^n\log\left(\frac{p_i}{1-(1-p_i)e^{X_ip_it}}\right)-t\sum_{i=1}^nX_i\hat{\mu}_ip_i,\]</span> <span class="math display">\[K^{\prime}(t)=\hat{\theta}\sum_{i=1}^n\frac{(1-p_i)e^{X_ip_it}X_ip_i}{1-(1-p_i)e^{X_ip_it}}-\sum_{i=1}^nX_i\hat{\mu}_ip_i,\]</span> <span class="math display">\[K^{\prime\prime}(t)=\hat{\theta}\sum_{i=1}^n\frac{(1-p_i)e^{X_ip_it}X_i^2p_i^2}{\left[1-(1-p_i)e^{X_ip_it}\right]^2}.\]</span></p>
+<p>The distribution of <span class="math inline">\(S\)</span> at <span class="math inline">\(s\)</span> is <span class="math display">\[\Pr(S&lt;s)=\Phi\left\{w+\frac{1}{w}\log\left(\frac{v}{w}\right)\right\},\]</span> where <span class="math inline">\(w=sgn(\hat{t})\sqrt{2(\hat{t}s-K(\hat{t}))}\)</span>, <span class="math inline">\(v=\hat{t}\sqrt{k^{\prime\prime}(\hat{t})}\)</span>, <span class="math inline">\(\hat{t}\)</span> is the solution to the equation <span class="math inline">\(K^{\prime}(t)=0\)</span>, and <span class="math inline">\(\Phi\)</span> is the distribution function of a standard normal distribution.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

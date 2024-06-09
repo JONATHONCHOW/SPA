@@ -14,7 +14,10 @@ BugReports: https://github.com/JONATHONCHOW/SPA/issues
 Imports: 
   stats,
   MASS,
+  dplyr,
+  magrittr,
   ggplot2,
+  scales,
   arscpp
 Remotes:
   hunzikp/arscpp

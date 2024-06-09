@@ -7,7 +7,6 @@ vignette: >
   %\VignetteIndexEntry{Saddlepoint Approximations Method in Logistic Regression Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteEncoding{UTF-8}
 bibliography: ref.bib
 ---
 
@@ -49,7 +48,7 @@ Fit logistic model with different **MAF**, **ccratio**, **methods**.
 pval <- 0
 pval.NA <- 0
 alpha <- 0.01
-for (j in 1:500) {
+for (j in 1:50) {
   simu <- logistic_simulation(cases = 100, controls = 19900, maf = 0.005) # ccratio = 0.5%, maf = 0.005
   result <- logistic_spa(simu$genos, simu$pheno, simu$cov, minmac = 5, cutoff = 2, log.p = FALSE)
   pval <- c(pval, result$p.value)
