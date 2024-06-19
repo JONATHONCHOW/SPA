@@ -1,6 +1,6 @@
 Package: SPA
 Title: Saddlepoint Approximations
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: 
   person("Jonathon", "Chow", , "jonathonchow23@gmail.com", role = c("aut", "cre"))
 Description: Use SPA methods on perturb-seq data.
@@ -11,7 +11,14 @@ RoxygenNote: 7.2.3
 URL: https://github.com/JONATHONCHOW/SPA,
   https://jonathonchow.github.io/SPA/
 BugReports: https://github.com/JONATHONCHOW/SPA/issues
+LinkingTo: 
+  Rcpp,
+  RcppArmadillo,
+  BH
 Imports: 
+  Rcpp,
+  RcppArmadillo,
+  BH,
   stats,
   MASS,
   dplyr,

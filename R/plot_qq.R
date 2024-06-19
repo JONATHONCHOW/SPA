@@ -58,7 +58,7 @@
 #' ps6 <- stats::runif(300, min = 0, max = 1)
 #' gg_qqplot(ps1)
 #' gg_qqplot(ps1, ps2, ps3, ps4, ps5, ps6, methods = c("a", "b", "c", "d", "e", "f"), p_hline = 0.01, plot_title = "FUN")
-gg_qqplot <- function(ps1, ps2 = NULL, ps3 = NULL, ps4 = NULL, ps5 = NULL, ps6 = NULL, methods = NULL, ci = 0.95, p_hline = NULL, plot_title = NULL, plot_colors = c(aa = "firebrick3", bb = "hotpink2", cc = "darkslategray4", dd = "royalblue4", ee = "darkslategray4", ff = "magenta4")) {
+gg_qqplot <- function(ps1, ps2 = NULL, ps3 = NULL, ps4 = NULL, ps5 = NULL, ps6 = NULL, methods = NULL, ci = 0.95, p_hline = NULL, plot_title = NULL, plot_colors = c(aa = "#E69F00", bb = "#56B4E9", cc = "#009E73", dd = "#F0E442", ee = "#0072B2", ff = "#CC79A7")) {
   if (is.null(ps2) && is.null(ps3) && is.null(ps4) && is.null(ps5) && is.null(ps6)) {
     if (is.null(methods)) {
       methods <- c("1")

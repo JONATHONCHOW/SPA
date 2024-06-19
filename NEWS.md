@@ -9,3 +9,7 @@
 # SPA 0.2.0
 
 * Apply SPA method in NB generalized linear model.
+
+# SPA 0.3.0
+
+* Use Rcpp in logistic regression model.

@@ -15,8 +15,8 @@ gg_qqplot(
   ci = 0.95,
   p_hline = NULL,
   plot_title = NULL,
-  plot_colors = c(aa = "firebrick3", bb = "hotpink2", cc = "darkslategray4", dd =
-    "royalblue4", ee = "darkslategray4", ff = "magenta4")
+  plot_colors = c(aa = "#E69F00", bb = "#56B4E9", cc = "#009E73", dd = "#F0E442", ee =
+    "#0072B2", ff = "#CC79A7")
 )
 }
 \arguments{

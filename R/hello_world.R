@@ -1,3 +1,5 @@
+#' @useDynLib SPA
+#'
 #' @title Hello world
 #'
 #' @description Initialize SPA package.
